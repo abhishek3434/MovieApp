@@ -1,8 +1,14 @@
 import './App.css';
 
+import Navbar from './Component/Navbar';
+import Banner from './Component/Banner';
+
 function App() {
   return (
-    <div>Movie APP</div>
+    <div>
+      <Navbar/>
+      <Banner/>
+    </div>
   );
 }
 

@@ -1,4 +1,4 @@
-const movies = [
+export const movies = [
   {
     _id: "5b21ca3eeb7f6fbccd471815",
     title: "Terminator",
