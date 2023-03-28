@@ -36,3 +36,26 @@
     transform: rotate(360deg);
   }
 }
+
+.banner-card{
+  height: 70%;
+  position: relative;
+}
+
+.banner-card-body{
+  position: absolute;
+  color: azure;
+  top:75%
+}
+@media screen and (max-width: 1010px) {
+  .banner-card-body{
+    visibility: hidden;
+  }
+}
+
+
+
+
+
+
+

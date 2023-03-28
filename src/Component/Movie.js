@@ -16,11 +16,11 @@ class Movie extends Component {
         <div style={{display:"flex",flexWrap:'wrap',justifyContent:'space-around'}}>
             {
                 data.map((movieObj)=>(
-                    <div class="card" style={{width: "18rem",margin:"1rem"}}>
-                    <img class="card-img-top" src={`https://image.tmdb.org/t/p/original/${movieObj.backdrop_path}`} alt={movieObj.title} />
-                    <div class="card-body">
-                      <h5 class="card-title">{movieObj.title}</h5>
-                      <p class="card-text">{movieObj.overview}</p>
+                    <div className="card" key={movieObj.id} style={{width: "18rem",margin:"1rem"}}>
+                    <img className="card-img-top" src={`https://image.tmdb.org/t/p/original/${movieObj.backdrop_path}`} alt={movieObj.title} />
+                    <div className="card-body">
+                      <h5 className="card-title">{movieObj.title}</h5>
+                      <p className="card-text ">{movieObj.overview}</p>
                     </div>
                   </div>
                 ))

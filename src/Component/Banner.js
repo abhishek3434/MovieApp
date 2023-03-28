@@ -14,14 +14,13 @@ class Banner extends Component {
       </>
     ) : (
       <div>
-        <div className="card" >
+        <div className="card banner-card" >
           <img className="card-img-top" src={`https://image.tmdb.org/t/p/original/${data.backdrop_path}`}  alt={data.title} />
-          <div className="card-body">
-            {/* <h5 className="card-title">Card title</h5>
-            <p className="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </p> */}
+          <div className="card-body banner-card-body">
+            <h5 className="card-title banner-title">{data.title}</h5>
+            <p className="card-text banner-text">
+             {data.overview}
+            </p>
            
           </div>
         </div>
