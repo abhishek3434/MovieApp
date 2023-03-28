@@ -1,12 +1,20 @@
 import React, { Component } from "react";
-import { movies } from "./getMovieData";
+// import { movies } from "./getMovieData";
+import axios from 'axios';
+
 class Movie extends Component {
   constructor() {
     super();
-    this.state = { hover: "" };
+    this.state = { hover: "",movies:[] };
+  }
+  async componentDidMount(){
+    // https://api.themoviedb.org/3/movie/popular?api_key=5540e483a20e0b20354dabc2d66a3ata1c9&language=en-US&page=${newPage}
+    const response=await axios.get('https://api.themoviedb.org/3/movie/popular?api_key=5540e483a20e0b20354dabc2d66a31c9&language=en-US&page=3')
+    const data=response.data;
+    this.setState({movies:[...data.results]});
   }
   render() {
-    let data = movies["results"];
+    let data = this.state.movies;
 
     return data === "" ? (
       <>
