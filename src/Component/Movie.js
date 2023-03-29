@@ -16,6 +16,35 @@ class Movie extends Component {
     this.setState({ movies: [...data.results] });
   }
 
+  async renderPage(){
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/movie/popular?api_key=5540e483a20e0b20354dabc2d66a31c9&language=en-US&page=${this.state.currentPage}`
+    );
+    const data = response.data;
+    this.setState({ movies: [...data.results] });
+  }
+
+  handleNext=()=>{
+    let newArr=[];
+    for(let i=1;i<=this.state.parr.length+1;i++){
+      newArr.push(i);
+    }
+    this.setState({parr:[...newArr],currentPage:this.state.currentPage+1},this.renderPage);
+  }
+
+  handlePrev=()=>{
+    if(this.state.parr.length<2) return;
+    let newArr=[];
+    for(let i=1;i<this.state.parr.length;i++){
+      newArr.push(i);
+    }
+    this.setState({parr:[...newArr],currentPage:this.state.currentPage-1},this.renderPage);
+  }
+
+  handleCurr=(id)=>{
+    if(this.state.currentPage === id) return;
+    this.setState({currentPage:id},this.renderPage);
+  }
   
 
 
@@ -72,7 +101,7 @@ class Movie extends Component {
           <nav aria-label="Page navigation example">
             <ul className="pagination">
               <li className="page-item">
-                <a className="page-link" href="">
+                <a className="page-link" onClick={this.handlePrev} href="#/">
                   Previous
                 </a>
                 </li>
@@ -80,17 +109,15 @@ class Movie extends Component {
             this.state.parr.map((value)=>(
               <div key={value}> 
               <li className="page-item">
-                <a className="page-link" href="">
+                <a className="page-link" onClick={()=>this.handleCurr(value)}  href="#/">
                   {value}
                 </a>
               </li>
               </div>
             ))
            }
-             
-           
               <li className="page-item">
-                <a className="page-link" href="">
+                <a className="page-link" onClick={this.handleNext} href="#/">
                   Next
                 </a>
               </li>
