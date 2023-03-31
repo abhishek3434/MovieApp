@@ -9,9 +9,9 @@ function App() {
   return (
     <div>
       <Navbar/>
-      <Banner/>
-      <Movie/>
-      {/* <Favourite/> */}
+      {/* <Banner/> */}
+      {/* <Movie/> */}
+      <Favourite/>
     </div>
   );
 }
