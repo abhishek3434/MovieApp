@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { movies } from "./getMovieData";
+import { movies,genereId } from "./getMovieData";
 
 class Favourite extends Component {
   constructor() {
     super();
-    this.state = {filteredMovie: []};  
+    this.state = {filteredMovie: [],genere:'All'};  
   }
   componentDidMount(){
     this.setState({
@@ -17,43 +17,56 @@ class Favourite extends Component {
     let word=e.target.value.toLowerCase().trim();
 
     if(word===''){
-      this.setState({
-        filteredMovie:[...movies.results]
-      })
+      this.changeGenere(this.state.genere);
       return;
     }
-
     for(let i=0;i<this.state.filteredMovie.length;i++){
       if((this.state.filteredMovie[i].title.toLowerCase().trim()).startsWith(word)){
         newArr.push(this.state.filteredMovie[i])
       }
     }
-    this.setState({filteredMovie:newArr});
-    console.log(newArr);
+    this.setState({filteredMovie:[...newArr]});
   };
 
+
+
+  changeGenere=(type)=>{
+    let val=type;
+    let newArr=[];
+    if(val === "All"){
+      this.setState({
+        filteredMovie:[...movies.results],
+        genere:"All"
+      })
+      return;
+    }
+
+    for(let i=0;i<movies.results.length;i++){
+      if((genereId[movies.results[i].genre_ids[0]]) === val){
+        newArr.push(movies.results[i])
+      }
+    }
+    this.setState({filteredMovie:[...newArr],genere:val});
+  }
+
+  delete=(id)=>{
+    let newArr=[];
+
+    newArr=this.state.filteredMovie.filter((movieObj)=>{
+      return (movieObj.id !== id)
+    });
+    
+    this.setState({filteredMovie:[...newArr]});
+  }
+
   render() {
-    let genereId = {
-      28: "Action",
-      12: "Adventure",
-      16: "Animation",
-      35: "Comedy",
-      80: "Crime",
-      99: "Documentary",
-      18: "Drama",
-      10751: "Family",
-      14: "Fantasy",
-      36: "History",
-      27: "Horror",
-      10402: "Music",
-      9648: "Mystery",
-      10749: "Romance",
-      878: "Sci-fi",
-      10770: "TV",
-      53: "Thriller",
-      10752: "War",
-      37: "Western",
-    };
+    
+    let temp=[];
+    movies.results.forEach((movieObj)=>{
+      if(!temp.includes(genereId[movieObj.genre_ids[0]])){
+        temp.push(genereId[movieObj.genre_ids[0]]);
+      }
+    })
 
     return (
       <div>
@@ -61,9 +74,12 @@ class Favourite extends Component {
           <div className="row fav-genere">
             <div className="col-3">
               <ul className="list-group ">
-                <li className="list-group-item active">Action</li>
-                <li className="list-group-item">Comdey</li>
-                <li className="list-group-item">Adventure</li>
+                <li className={this.state.genere==="All"?"list-group-item active":"list-group-item" } onClick={()=>this.changeGenere("All")} >All Genere</li>
+                {
+                  temp.map((obj)=>(
+                <li className={this.state.genere===obj?"list-group-item active":"list-group-item" } onClick={()=>this.changeGenere(obj)} key={obj}>{obj}</li>
+                  ))
+                }
               </ul>
             </div>
 
@@ -110,7 +126,7 @@ class Favourite extends Component {
                           <td>{movieObj.popularity}</td>
                           <td>{movieObj.vote_average}</td>
                           <td>
-                            <button type="button" className="btn btn-danger">
+                            <button type="button" onClick={()=>this.delete(movieObj.id)} className="btn btn-danger">
                               Delete
                             </button>
                           </td>
