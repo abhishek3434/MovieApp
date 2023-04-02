@@ -366,3 +366,17 @@ export const genereId = {
   10752: "War",
   37: "Western",
 };
+
+function getLocal(){
+let keys=localStorage.getItem("keys");
+keys=JSON.parse(keys);
+let newArr=[];
+if(keys == null) return newArr
+
+for(let i=0;i<keys.length;i++){
+  newArr.push(JSON.parse(localStorage.getItem(keys[i])));
+}
+return newArr;
+}
+
+export {getLocal};

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { movies,genereId } from "./getMovieData";
+import {genereId,getLocal as localD } from "./getMovieData";
 
 class Favourite extends Component {
   constructor() {
@@ -8,7 +8,8 @@ class Favourite extends Component {
   }
   componentDidMount(){
     this.setState({
-      filteredMovie:[...movies.results]
+      // filteredMovie:[...movies.results]
+      filteredMovie:[...localD()]
     })
   }
 
@@ -35,15 +36,16 @@ class Favourite extends Component {
     let newArr=[];
     if(val === "All"){
       this.setState({
-        filteredMovie:[...movies.results],
+        // filteredMovie:[...movies.results],
+        filteredMovie:[...localD()],
         genere:"All"
       })
       return;
     }
 
-    for(let i=0;i<movies.results.length;i++){
-      if((genereId[movies.results[i].genre_ids[0]]) === val){
-        newArr.push(movies.results[i])
+    for(let i=0;i<localD().length;i++){
+      if((genereId[localD()[i].genre_ids[0]]) === val){
+        newArr.push(localD()[i])
       }
     }
     this.setState({filteredMovie:[...newArr],genere:val});
@@ -51,7 +53,7 @@ class Favourite extends Component {
 
   delete=(id)=>{
     let newArr=[];
-
+    
     newArr=this.state.filteredMovie.filter((movieObj)=>{
       return (movieObj.id !== id)
     });
@@ -62,7 +64,13 @@ class Favourite extends Component {
   render() {
     
     let temp=[];
-    movies.results.forEach((movieObj)=>{
+    // movies.results.forEach((movieObj)=>{
+    //   if(!temp.includes(genereId[movieObj.genre_ids[0]])){
+    //     temp.push(genereId[movieObj.genre_ids[0]]);
+    //   }
+    // })
+
+    this.state.filteredMovie.forEach((movieObj)=>{
       if(!temp.includes(genereId[movieObj.genre_ids[0]])){
         temp.push(genereId[movieObj.genre_ids[0]]);
       }

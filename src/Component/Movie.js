@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 // import { movies } from "./getMovieData";
+
 import axios from "axios";
 
 class Movie extends Component {
@@ -50,6 +51,7 @@ class Movie extends Component {
     if (localStorage.getItem("keys")) {
       let arr = localStorage.getItem("keys");
       arr = JSON.parse(arr);
+      if(arr.includes(movie.id)) return;
       arr.push(movie.id);
       localStorage.setItem("keys", JSON.stringify(arr));
       localStorage.setItem(movie.id,JSON.stringify(movie))
@@ -92,7 +94,7 @@ class Movie extends Component {
               style={{ width: "18rem", margin: "1rem" }}
               onMouseEnter={() => this.setState({ hover: movieObj.id })}
               onMouseLeave={() => this.setState({ hover: "" })}
-              onClick={()=>this.addMovie(movieObj)}
+              
             >
               <img
                 className="card-img-top"
@@ -105,8 +107,10 @@ class Movie extends Component {
               </div>
               <div className="button-flex">
                 {this.state.hover === movieObj.id ? (
-                  <button className="btn btn-primary movie-button">
+                  <button onClick={()=>this.addMovie(movieObj)} className="btn btn-primary movie-button">
+                    
                     Add to favourite
+                    
                   </button>
                 ) : (
                   ""
