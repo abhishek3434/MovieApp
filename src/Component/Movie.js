@@ -45,6 +45,24 @@ class Movie extends Component {
     if(this.state.currentPage === id) return;
     this.setState({currentPage:id},this.renderPage);
   }
+
+  addMovie=(movie)=>{
+    if (localStorage.getItem("keys")) {
+      let arr = localStorage.getItem("keys");
+      arr = JSON.parse(arr);
+      arr.push(movie.id);
+      localStorage.setItem("keys", JSON.stringify(arr));
+      localStorage.setItem(movie.id,JSON.stringify(movie))
+    }
+    else{
+      let arr=[movie.id];
+      localStorage.setItem("keys", JSON.stringify(arr));
+      localStorage.setItem(movie.id,JSON.stringify(movie))
+    }
+
+
+
+  }
   
 
 
@@ -74,6 +92,7 @@ class Movie extends Component {
               style={{ width: "18rem", margin: "1rem" }}
               onMouseEnter={() => this.setState({ hover: movieObj.id })}
               onMouseLeave={() => this.setState({ hover: "" })}
+              onClick={()=>this.addMovie(movieObj)}
             >
               <img
                 className="card-img-top"
