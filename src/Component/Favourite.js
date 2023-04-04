@@ -53,11 +53,19 @@ class Favourite extends Component {
 
   delete=(id)=>{
     let newArr=[];
+    let arr = localStorage.getItem("keys");
+    localStorage.removeItem(id)
+    arr = JSON.parse(arr);
+
+    arr=arr.filter((loc)=>{
+      return loc!==id;
+    })
+
     
     newArr=this.state.filteredMovie.filter((movieObj)=>{
       return (movieObj.id !== id)
     });
-    
+    localStorage.setItem("keys",JSON.stringify(arr));
     this.setState({filteredMovie:[...newArr]});
   }
 

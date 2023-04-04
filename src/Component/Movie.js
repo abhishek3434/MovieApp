@@ -61,15 +61,25 @@ class Movie extends Component {
       localStorage.setItem("keys", JSON.stringify(arr));
       localStorage.setItem(movie.id,JSON.stringify(movie))
     }
-
-
-
+  }
+  delete=(id)=>{
+    let newArr=[];
+    let arr = localStorage.getItem("keys");
+    localStorage.removeItem(id)
+    arr = JSON.parse(arr);
+    
+    arr=arr.filter((loc)=>{
+ 
+      return loc!==id;
+    })
+    localStorage.setItem("keys",JSON.stringify(arr));
   }
   
 
 
   render() {
     let data = this.state.movies;
+ 
 
     return data.length === 0 ? (
       <>
@@ -106,14 +116,18 @@ class Movie extends Component {
                 <p className="card-text ">{movieObj.overview}</p>
               </div>
               <div className="button-flex">
-                {this.state.hover === movieObj.id ? (
+                {this.state.hover === movieObj.id  ? (!localStorage.getItem(movieObj.id)? (
                   <button onClick={()=>this.addMovie(movieObj)} className="btn btn-primary movie-button">
                     
                     Add to favourite
                     
                   </button>
-                ) : (
-                  ""
+                ):( <button onClick={()=>this.delete(movieObj.id)}  className="btn btn-danger movie-button">
+                    
+                Remove from favourite
+                
+              </button>)) : (
+                 ''
                 )}
               </div>
             </div>
