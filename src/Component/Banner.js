@@ -2,9 +2,15 @@ import React, { Component } from "react";
 import { movies } from "./getMovieData";
 
 class Banner extends Component {
+  constructor(){
+    super();
+    this.state={banner:0};
+  }
   render() {
-    let data = movies['results'][0];
-    console.log(data);
+    let id=this.state.banner%movies['results'].length;
+    let data = movies['results'][id];
+  
+    setTimeout(()=>{this.setState({banner:id+1})},9000)
    
     return data === "" ? (
       <>
@@ -25,6 +31,7 @@ class Banner extends Component {
           </div>
         </div>
       </div>
+
     );
   }
 }
