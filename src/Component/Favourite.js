@@ -69,6 +69,13 @@ class Favourite extends Component {
     this.setState({filteredMovie:[...newArr]});
   }
 
+  sortTitle=(elem)=>{
+    
+    let newArr=[...this.state.filteredMovie];
+    let sorted=newArr.sort((a,b)=> a[elem] > b[elem]?1:-1);
+    this.setState({filteredMovie:[...sorted]})
+  }
+
   render() {
     
     let temp=[];
@@ -78,7 +85,7 @@ class Favourite extends Component {
     //   }
     // })
 
-    this.state.filteredMovie.forEach((movieObj)=>{
+    localD().forEach((movieObj)=>{
       if(!temp.includes(genereId[movieObj.genre_ids[0]])){
         temp.push(genereId[movieObj.genre_ids[0]]);
       }
@@ -119,10 +126,10 @@ class Favourite extends Component {
                     <thead>
                       <tr>
                         <th scope="col"></th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Genere</th>
-                        <th scope="col">Popularity</th>
-                        <th scope="col">Rating</th>
+                        <th scope="col" onClick={()=>this.sortTitle('title')}>Title</th>
+                        <th scope="col" onClick={()=>this.sortTitle('title')}>Genere</th>
+                        <th scope="col" onClick={()=>this.sortTitle('popularity')}>Popularity</th>
+                        <th scope="col" onClick={()=>this.sortTitle('vote_average')}>Rating</th>
                         <th scope="col"></th>
                       </tr>
                     </thead>
