@@ -1,95 +1,116 @@
 import React, { Component } from "react";
-import {genereId,getLocal as localD } from "./getMovieData";
+import { genereId, getLocal as localD } from "./getMovieData";
 
 class Favourite extends Component {
   constructor() {
     super();
-    this.state = {filteredMovie: [],genere:'All'};  
+    this.state = {
+      filteredMovie: [],
+      genere: "All",
+      currPage: 1,
+      parr: [1],
+      currRecord: 5,
+    };
   }
-  componentDidMount(){
+  componentDidMount() {
     this.setState({
       // filteredMovie:[...movies.results]
-      filteredMovie:[...localD()]
-    })
+      filteredMovie: [...localD()],
+    });
   }
 
   searchMovie = (e) => {
-    let newArr=[];
-    let word=e.target.value.toLowerCase().trim();
+    let newArr = [];
+    let word = e.target.value.toLowerCase().trim();
 
-    if(word===''){
+    if (word === "") {
       this.changeGenere(this.state.genere);
       return;
     }
-    for(let i=0;i<this.state.filteredMovie.length;i++){
-      if((this.state.filteredMovie[i].title.toLowerCase().trim()).startsWith(word)){
-        newArr.push(this.state.filteredMovie[i])
+    for (let i = 0; i < this.state.filteredMovie.length; i++) {
+      if (
+        this.state.filteredMovie[i].title.toLowerCase().trim().startsWith(word)
+      ) {
+        newArr.push(this.state.filteredMovie[i]);
       }
     }
-    this.setState({filteredMovie:[...newArr]});
+    this.setState({ filteredMovie: [...newArr] });
   };
 
-
-
-  changeGenere=(type)=>{
-    let val=type;
-    let newArr=[];
-    if(val === "All"){
+  changeGenere = (type) => {
+    let val = type;
+    let newArr = [];
+    if (val === "All") {
       this.setState({
         // filteredMovie:[...movies.results],
-        filteredMovie:[...localD()],
-        genere:"All"
-      })
+        filteredMovie: [...localD()],
+        genere: "All",
+      });
       return;
     }
 
-    for(let i=0;i<localD().length;i++){
-      if((genereId[localD()[i].genre_ids[0]]) === val){
-        newArr.push(localD()[i])
+    for (let i = 0; i < localD().length; i++) {
+      if (genereId[localD()[i].genre_ids[0]] === val) {
+        newArr.push(localD()[i]);
       }
     }
-    this.setState({filteredMovie:[...newArr],genere:val});
-  }
+    this.setState({ filteredMovie: [...newArr], genere: val });
+  };
 
-  delete=(id)=>{
-    let newArr=[];
+  delete = (id) => {
+    let newArr = [];
     let arr = localStorage.getItem("keys");
-    localStorage.removeItem(id)
+    localStorage.removeItem(id);
     arr = JSON.parse(arr);
 
-    arr=arr.filter((loc)=>{
-      return loc!==id;
-    })
-
-    
-    newArr=this.state.filteredMovie.filter((movieObj)=>{
-      return (movieObj.id !== id)
+    arr = arr.filter((loc) => {
+      return loc !== id;
     });
-    localStorage.setItem("keys",JSON.stringify(arr));
-    this.setState({filteredMovie:[...newArr]});
+
+    newArr = this.state.filteredMovie.filter((movieObj) => {
+      return movieObj.id !== id;
+    });
+    localStorage.setItem("keys", JSON.stringify(arr));
+    this.setState({ filteredMovie: [...newArr] });
+  };
+
+  sortTitle = (elem) => {
+    let newArr = [...this.state.filteredMovie];
+    let sorted = newArr.sort((a, b) => (a[elem] > b[elem] ? 1 : -1));
+    this.setState({ filteredMovie: [...sorted] });
+  };
+  handlePage=(e)=>{
+    let elem=e.target.value
+    let arr=[1];
+    let lt=this.state.filteredMovie.length;
+    let cal=(lt/elem);
+    if(lt>elem){
+      cal+=lt%elem;
+    }
+    for(let i=2;i<=cal;i++){
+      arr.push(i);
+    }
+    this.setState({currRecord:elem,parr:[...arr]})
   }
 
-  sortTitle=(elem)=>{
-    
-    let newArr=[...this.state.filteredMovie];
-    let sorted=newArr.sort((a,b)=> a[elem] > b[elem]?1:-1);
-    this.setState({filteredMovie:[...sorted]})
+  handleCurr=(value)=>{
+    this.setState({currPage:value})
   }
 
   render() {
-    
-    let temp=[];
-    // movies.results.forEach((movieObj)=>{
-    //   if(!temp.includes(genereId[movieObj.genre_ids[0]])){
-    //     temp.push(genereId[movieObj.genre_ids[0]]);
-    //   }
-    // })
+    let temp = [];
+  
 
-    localD().forEach((movieObj)=>{
-      if(!temp.includes(genereId[movieObj.genre_ids[0]])){
+    localD().forEach((movieObj) => {
+      if (!temp.includes(genereId[movieObj.genre_ids[0]])) {
         temp.push(genereId[movieObj.genre_ids[0]]);
       }
-    })
+    });
+
+
+    let finalMovie=this.state.filteredMovie;
+
+
 
     return (
       <div>
@@ -97,12 +118,29 @@ class Favourite extends Component {
           <div className="row fav-genere">
             <div className="col-3">
               <ul className="list-group ">
-                <li className={this.state.genere==="All"?"list-group-item active":"list-group-item" } onClick={()=>this.changeGenere("All")} >All Genere</li>
-                {
-                  temp.map((obj)=>(
-                <li className={this.state.genere===obj?"list-group-item active":"list-group-item" } onClick={()=>this.changeGenere(obj)} key={obj}>{obj}</li>
-                  ))
-                }
+                <li
+                  className={
+                    this.state.genere === "All"
+                      ? "list-group-item active"
+                      : "list-group-item"
+                  }
+                  onClick={() => this.changeGenere("All")}
+                >
+                  All Genere
+                </li>
+                {temp.map((obj) => (
+                  <li
+                    className={
+                      this.state.genere === obj
+                        ? "list-group-item active"
+                        : "list-group-item"
+                    }
+                    onClick={() => this.changeGenere(obj)}
+                    key={obj}
+                  >
+                    {obj}
+                  </li>
+                ))}
               </ul>
             </div>
 
@@ -116,7 +154,8 @@ class Favourite extends Component {
                   ></input>
                 </div>
                 <div className="col-6">
-                  <input type="number" className="input-group-text"></input>
+                  <input type="number" className="input-group-text" onChange={this.handlePage} >
+                  </input>
                 </div>
               </div>
 
@@ -126,10 +165,24 @@ class Favourite extends Component {
                     <thead>
                       <tr>
                         <th scope="col"></th>
-                        <th scope="col" onClick={()=>this.sortTitle('title')}>Title</th>
-                        <th scope="col" onClick={()=>this.sortTitle('title')}>Genere</th>
-                        <th scope="col" onClick={()=>this.sortTitle('popularity')}>Popularity</th>
-                        <th scope="col" onClick={()=>this.sortTitle('vote_average')}>Rating</th>
+                        <th scope="col" onClick={() => this.sortTitle("title")}>
+                          Title
+                        </th>
+                        <th scope="col" onClick={() => this.sortTitle("title")}>
+                          Genere
+                        </th>
+                        <th
+                          scope="col"
+                          onClick={() => this.sortTitle("popularity")}
+                        >
+                          Popularity
+                        </th>
+                        <th
+                          scope="col"
+                          onClick={() => this.sortTitle("vote_average")}
+                        >
+                          Rating
+                        </th>
                         <th scope="col"></th>
                       </tr>
                     </thead>
@@ -149,7 +202,11 @@ class Favourite extends Component {
                           <td>{movieObj.popularity}</td>
                           <td>{movieObj.vote_average}</td>
                           <td>
-                            <button type="button" onClick={()=>this.delete(movieObj.id)} className="btn btn-danger">
+                            <button
+                              type="button"
+                              onClick={() => this.delete(movieObj.id)}
+                              className="btn btn-danger"
+                            >
                               Delete
                             </button>
                           </td>
@@ -157,6 +214,25 @@ class Favourite extends Component {
                       ))}
                     </tbody>
                   </table>
+                  <div className="div-pagination">
+                    <nav aria-label="Page navigation example">
+                      <ul className="pagination">
+                        {this.state.parr.map((value) => (
+                          <div key={value}>
+                            <li className="page-item">
+                              <a
+                                className="page-link"
+                                onClick={() => this.handleCurr(value)}
+                                href="#/"
+                              >
+                                {value}
+                              </a>
+                            </li>
+                          </div>
+                        ))}
+                      </ul>
+                    </nav>
+                  </div>
                 </div>
               </div>
             </div>
