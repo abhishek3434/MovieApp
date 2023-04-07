@@ -14,7 +14,6 @@ class Favourite extends Component {
   }
   componentDidMount() {
     this.setState({
-      // filteredMovie:[...movies.results]
       filteredMovie: [...localD()],
     });
   }
@@ -42,7 +41,6 @@ class Favourite extends Component {
     let newArr = [];
     if (val === "All") {
       this.setState({
-        // filteredMovie:[...movies.results],
         filteredMovie: [...localD()],
         genere: "All",
       });
@@ -54,6 +52,7 @@ class Favourite extends Component {
         newArr.push(localD()[i]);
       }
     }
+   
     this.setState({ filteredMovie: [...newArr], genere: val });
   };
 
@@ -80,17 +79,11 @@ class Favourite extends Component {
     this.setState({ filteredMovie: [...sorted] });
   };
   handlePage=(e)=>{
-    let elem=e.target.value
-    let arr=[1];
-    let lt=this.state.filteredMovie.length;
-    let cal=(lt/elem);
-    if(lt>elem){
-      cal+=lt%elem;
-    }
-    for(let i=2;i<=cal;i++){
-      arr.push(i);
-    }
-    this.setState({currRecord:elem,parr:[...arr]})
+
+    let elem=e.nativeEvent.data
+    if(elem===null || elem === 0 || elem===undefined)elem=3;
+    console.log(this.state.currRecord)
+    this.setState({currRecord:elem})
   }
 
   handleCurr=(value)=>{
@@ -108,7 +101,24 @@ class Favourite extends Component {
     });
 
 
-    let finalMovie=this.state.filteredMovie;
+    let arr=[1];
+    let elem=this.state.currRecord;
+    let lt=this.state.filteredMovie.length;
+    let cal=(lt/elem);
+    if(lt%elem){
+      cal+=1;
+    }
+
+    for(let i=2;i<=cal;i++){
+      arr.push(i);
+    }
+
+
+
+    let start=(this.state.currPage-1)*this.state.currRecord;
+    let end=(this.state.currPage)*Math.min(this.state.currRecord,this.state.filteredMovie.length);
+
+    let finalMovie=this.state.filteredMovie.slice(start,end);
 
 
 
@@ -154,7 +164,7 @@ class Favourite extends Component {
                   ></input>
                 </div>
                 <div className="col-6">
-                  <input type="number" className="input-group-text" onChange={this.handlePage} >
+                  <input type="number" className="input-group-text" onChange={this.handlePage}  >
                   </input>
                 </div>
               </div>
@@ -187,7 +197,7 @@ class Favourite extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.filteredMovie.map((movieObj) => (
+                      {finalMovie.map((movieObj) => (
                         <tr key={movieObj.id}>
                           <th>
                             <img
@@ -217,7 +227,7 @@ class Favourite extends Component {
                   <div className="div-pagination">
                     <nav aria-label="Page navigation example">
                       <ul className="pagination">
-                        {this.state.parr.map((value) => (
+                        {arr.map((value) => (
                           <div key={value}>
                             <li className="page-item">
                               <a
